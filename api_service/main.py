@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pytapo import Tapo
+from utils.setup_logger import setup_logger
 
 load_dotenv()
 CAMERA_ONE_USERNAME = os.getenv("CAMERA_ONE_USERNAME")
@@ -20,6 +21,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+logger = setup_logger(__name__)
 
 
 def validate_auth_token(x_auth_token: str = Header(None)):
@@ -71,7 +73,7 @@ def ensure_camera_connection():
         # Check or refresh authentication token
         if not tapo_camera.ensureAuthenticated():
             tapo_camera.refreshStok()
-            print("Re-authenticated successfully with Tapo camera.")
+            logger.info("Re-authenticated successfully with Tapo camera.")
     except Exception as e:
         raise HTTPException(status_code=503, detail=str(e))
 
@@ -79,10 +81,13 @@ def ensure_camera_connection():
 @app.get("/video_feed")
 def video_feed(x_auth_token: str = Header(None)):
     # Authenticate user
+    logger.info("authenticating user...")
     validate_auth_token(x_auth_token)
     
     # Ensure camera is responsive and authenticated
+    logger.info("setting up camera connection...")
     ensure_camera_connection()
     
+    logger.info("starting stream...")
     rtsp_url = f"rtsp://{CAMERA_ONE_USERNAME}:{CAMERA_ONE_PASSWORD}@{CAMERA_ONE_IP}:554/stream1"
     return StreamingResponse(generate_frames(rtsp_url), media_type="multipart/x-mixed-replace;boundary=frame")
