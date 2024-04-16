@@ -59,10 +59,10 @@
             margin-left: 5px;
         }
         .icon-charging {
-            background-image: url('charging-icon.png'); /* Add path to your charging icon */
+            background-image: url('https://static.thenounproject.com/png/3149745-200.png');
         }
         .icon-overheated {
-            background-image: url('overheated-icon.png'); /* Add path to your overheated icon */
+            background-image: url('https://cdn-icons-png.flaticon.com/512/5815/5815992.png');
         }
         .camera-stats {
             width: 80%;
@@ -141,7 +141,7 @@
                 document.getElementById('battery_percent').textContent = stats.battery_percent;
                 const batteryIcon = document.getElementById('battery_icon');
                 batteryIcon.className = 'icon';
-                if (stats.battery_charging === 'YES') {
+                if (stats.battery_charging === 'Yes') {
                     batteryIcon.classList.add('icon-charging');
                 }
                 if (stats.battery_overheated === true) {
