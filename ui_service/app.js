@@ -148,6 +148,32 @@ app.get('/video_proxy', async (req, res) => {
 });
 
 
+app.get('/camera_stats', async (req, res) => {
+    if (!req.session.authenticated) {
+        return res.status(401).send('Unauthorized');
+    }
+
+    try {
+        const fetch = (await import('node-fetch')).default;
+        const statsResponse = await fetch('http://api_service:8000/camera_stats', {
+            headers: {
+                'X-Auth-Token': process.env.AUTHORIZED_TOKEN
+            }
+        });
+
+        if (!statsResponse.ok) {
+            throw new Error('Failed to fetch camera stats');
+        }
+
+        const data = await statsResponse.json();
+        res.json(data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Could not fetch camera stats');
+    }
+});
+
+
 // Middleware to serve static files. It should come after your authentication check.
 app.use(express.static('public'));
 

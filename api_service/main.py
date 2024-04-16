@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from pytapo import Tapo
 from utils.setup_logger import setup_logger
 
@@ -57,7 +57,7 @@ def generate_frames(rtsp_url):
         cap.release()
 
 
-def ensure_camera_connection():
+def ensure_camera_connection() -> Tapo:
     """
     Ensures the camera connection is established and valid by using the Tapo APIs.
     Tries to refresh and re-authenticate if necessary.
@@ -74,8 +74,30 @@ def ensure_camera_connection():
         if not tapo_camera.ensureAuthenticated():
             tapo_camera.refreshStok()
             logger.info("Re-authenticated successfully with Tapo camera.")
+        return tapo_camera
     except Exception as e:
         raise HTTPException(status_code=503, detail=str(e))
+
+
+
+@app.get("/camera_stats")
+async def camera_stats(x_auth_token: str = Header(None)):
+    # Authenticate user
+    logger.info("authenticating user...")
+    validate_auth_token(x_auth_token)
+
+    camera = ensure_camera_connection()
+    basic_info = camera.getBasicInfo()['device_info']['basic_info']
+
+    return JSONResponse(content={"camera_info": {
+        "power": basic_info.get("power", "unknown").title(),
+        "battery_percent": basic_info.get("battery_percent", -1),
+        "battery_charging": basic_info.get("battery_charging", "unknown").title(),
+        "battery_overheated": basic_info.get("battery_overheated", False),
+        "power_save_mode": basic_info.get("power_save_mode", "unknown").title(),
+        "power_save_status": basic_info.get("power_save_status", "unknown").title(),
+        "low_battery": basic_info.get("low_battery", False)
+    }})
 
 
 @app.get("/video_feed")
