@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  api_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.api_service
+    ports:
+      - "8000:8000"
+    restart: always
+    environment:
+      - AUTHORIZED_TOKEN=yourPassword
+  
+  ui_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui_service
+    ports:
+      - "80:3000"
+    restart: always
+    environment:
+      - AUTHORIZED_TOKEN=yourPassword

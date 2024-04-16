@@ -1,0 +1,5 @@
+uvicorn==0.22.0
+fastapi==0.109.2
+opencv-python==4.9.0.80
+python-dotenv==1.0.1
+pytapo==3.3.19

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Montreat Video Feed</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9; /* Uniform background color */
+        }
+        nav {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 50px;
+        }
+        nav h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .camera-option {
+            font-size: 18px;
+        }
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 50px); /* Adjust height considering nav height */
+        }
+        .video-container {
+            width: 80%; /* Define width of video */
+            max-width: 960px; /* Max width can be adjusted */
+            height: 540px; /* Maintains a 16:9 aspect ratio based on the max width */
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto; /* Maintains aspect ratio */
+            height: auto; /* Maintains aspect ratio */
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h1>Montreat View</h1>
+        <div class="camera-option">Camera One</div>
+    </nav>
+    <div class="content">
+        <div class="video-container">
+            <img src="http://localhost/video_proxy" alt="video feed">
+        </div>
+    </div>
+</body>
+</html>
