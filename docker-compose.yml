@@ -33,7 +33,7 @@ services:
       - "443:443"
     restart: always
     depends_on:
-      - api-service
+      - ui_service
 
   certbot:
     image: certbot/certbot
