@@ -86,6 +86,7 @@ async def camera_stats(x_auth_token: str = Header(None)):
     logger.info("authenticating user...")
     validate_auth_token(x_auth_token)
 
+    logger.info("setting up camera connection...")
     camera = ensure_camera_connection()
     basic_info = camera.getBasicInfo()['device_info']['basic_info']
 
